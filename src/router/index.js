@@ -1,13 +1,13 @@
-import Vue from 'vue'
-import Router from 'vue-router'
+import Vue from 'vue';
+import Router from 'vue-router';
 
 // in development-env not use lazy-loading, because lazy-loading too many pages will cause webpack hot update too slow. so only in production use lazy-loading;
 // detail: https://panjiachen.github.io/vue-element-admin-site/#/lazy-loading
 
-Vue.use(Router)
+Vue.use(Router);
 
 /* Layout */
-import Layout from '../views/layout/Layout'
+import Layout from '../views/layout/Layout';
 
 /**
 * hidden: true                   if `hidden:true` will not show in the sidebar(default is false)
@@ -31,121 +31,108 @@ export const constantRouterMap = [
     redirect: '/dashboard',
     name: 'Dashboard',
     hidden: true,
-    children: [{
-      path: 'dashboard',
-      component: () => import('@/views/dashboard/index')
-    }]
-  },
-
-  {
-    path: '/example',
-    component: Layout,
-    redirect: '/example/table',
-    name: 'Example',
-    meta: { title: 'Example', icon: 'example' },
     children: [
       {
-        path: 'table',
-        name: 'Table',
-        component: () => import('@/views/table/index'),
-        meta: { title: 'Table', icon: 'table' }
+        path: 'dashboard',
+        component: () => import('@/views/dashboard/index'),
+        meta: { title: '任务管理系统首页', icon: 'dashboard' }
+      }
+    ]
+  },
+
+  // 项目管理
+  {
+    path: '/project',
+    component: Layout,
+    redirect: '/project/list',
+    name: 'Project',
+    meta: { title: '项目管理', icon: 'clipboard' },
+    children: [
+      {
+        path: 'list',
+        name: 'ProjectList',
+        component: () => import('@/views/project/list'),
+        meta: { title: '项目列表' }
       },
       {
-        path: 'tree',
-        name: 'Tree',
-        component: () => import('@/views/tree/index'),
-        meta: { title: 'Tree', icon: 'tree' }
-      }
-    ]
-  },
-
-  {
-    path: '/form',
-    component: Layout,
-    children: [
-      {
-        path: 'index',
-        name: 'Form',
-        component: () => import('@/views/form/index'),
-        meta: { title: 'Form', icon: 'form' }
-      }
-    ]
-  },
-
-  {
-    path: '/nested',
-    component: Layout,
-    redirect: '/nested/menu1',
-    name: 'Nested',
-    meta: {
-      title: 'Nested',
-      icon: 'nested'
-    },
-    children: [
-      {
-        path: 'menu1',
-        component: () => import('@/views/nested/menu1/index'), // Parent router-view
-        name: 'Menu1',
-        meta: { title: 'Menu1' },
-        children: [
-          {
-            path: 'menu1-1',
-            component: () => import('@/views/nested/menu1/menu1-1'),
-            name: 'Menu1-1',
-            meta: { title: 'Menu1-1' }
-          },
-          {
-            path: 'menu1-2',
-            component: () => import('@/views/nested/menu1/menu1-2'),
-            name: 'Menu1-2',
-            meta: { title: 'Menu1-2' },
-            children: [
-              {
-                path: 'menu1-2-1',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-1'),
-                name: 'Menu1-2-1',
-                meta: { title: 'Menu1-2-1' }
-              },
-              {
-                path: 'menu1-2-2',
-                component: () => import('@/views/nested/menu1/menu1-2/menu1-2-2'),
-                name: 'Menu1-2-2',
-                meta: { title: 'Menu1-2-2' }
-              }
-            ]
-          },
-          {
-            path: 'menu1-3',
-            component: () => import('@/views/nested/menu1/menu1-3'),
-            name: 'Menu1-3',
-            meta: { title: 'Menu1-3' }
-          }
-        ]
+        path: 'create',
+        name: 'ProjectCreate',
+        component: () => import('@/views/project/form'),
+        meta: { title: '添加项目' }
       },
       {
-        path: 'menu2',
-        component: () => import('@/views/nested/menu2/index'),
-        meta: { title: 'menu2' }
+        path: 'edit/:id',
+        name: 'ProjectEdit',
+        component: () => import('@/views/project/form'),
+        meta: { title: '编辑任务', noCache: true },
+        hidden: true
       }
     ]
   },
-
+  // 任务管理
   {
-    path: 'external-link',
+    path: '/task',
     component: Layout,
+    redirect: '/task/list',
+    name: 'Task',
+    meta: { title: '任务管理', icon: 'list' },
     children: [
       {
-        path: 'https://panjiachen.github.io/vue-element-admin-site/#/',
-        meta: { title: 'External Link', icon: 'link' }
+        path: 'list',
+        name: 'TaskList',
+        component: () => import('@/views/task/list'),
+        meta: { title: '任务列表' }
+      },
+      {
+        path: 'create',
+        name: 'TaskCreate',
+        component: () => import('@/views/task/form'),
+        meta: { title: '添加任务' }
+      },
+      {
+        path: 'edit/:id',
+        name: 'TaskEdit',
+        component: () => import('@/views/task/form'),
+        meta: { title: '编辑任务', noCache: true },
+        hidden: true
+      }
+    ]
+  },
+  // 员工管理
+  {
+    path: '/staff',
+    component: Layout,
+    redirect: '/staff/list',
+    name: 'Staff',
+    meta: { title: '员工管理', icon: 'user' },
+    children: [
+      {
+        path: 'list',
+        name: 'StaffList',
+        component: () => import('@/views/staff/list'),
+        meta: { title: '员工列表' }
+      },
+      {
+        path: 'create',
+        name: 'StaffCreate',
+        component: () => import('@/views/staff/form'),
+        meta: { title: '添加员工' }
+      },
+      {
+        path: 'edit/:id',
+        name: 'StaffEdit',
+        component: () => import('@/views/staff/form'),
+        meta: { title: '编辑员工', noCache: true },
+        hidden: true
       }
     ]
   },
 
   { path: '*', redirect: '/404', hidden: true }
-]
+];
 
 export default new Router({
   // mode: 'history', //后端支持可开
   scrollBehavior: () => ({ y: 0 }),
   routes: constantRouterMap
-})
+});
