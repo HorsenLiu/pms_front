@@ -28,7 +28,7 @@ export const constantRouterMap = [
   {
     path: '/',
     component: Layout,
-    redirect: '/dashboard',
+    redirect: '/project',
     name: 'Dashboard',
     hidden: true,
     children: [
@@ -65,6 +65,13 @@ export const constantRouterMap = [
         name: 'ProjectEdit',
         component: () => import('@/views/project/form'),
         meta: { title: '编辑任务', noCache: true },
+        hidden: true
+      },
+      {
+        path: 'details/:id',
+        name: 'ProjectDetails',
+        component: () => import('@/views/project/details'),
+        meta: { title: '项目详情', noCache: true },
         hidden: true
       }
     ]

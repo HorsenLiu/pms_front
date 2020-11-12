@@ -56,34 +56,34 @@
       <el-table-column
         prop="name"
         label="项目名称"
-        min-width="20%"
+        min-width="25%"
         align="center"
       >
       </el-table-column>
       <el-table-column
         prop="startTime"
         label="开始时间"
-        min-width="10%"
+        min-width="8%"
         align="center"
       >
       </el-table-column>
       <el-table-column
         prop="endTime"
         label="结束时间"
-        min-width="10%"
+        min-width="8%"
         align="center"
       >
       </el-table-column>
       <el-table-column
         prop="staffNames"
         label="项目成员"
-        min-width="15%"
+        min-width="25%"
         align="center"
       >
       </el-table-column>
       <el-table-column
         label="时间进度"
-        min-width="10%"
+        min-width="9%"
         align="center"
       >
         <template slot-scope="scope">
@@ -165,6 +165,9 @@ export default {
     // 页面跳转
     toEdit(id) {
       this.$router.push('/project/edit/' + id);
+    },
+    toDetails(id) {
+      this.$router.push('/project/details/' + id);
     },
     // 获取数据
     fetchData(page = 1) {
@@ -264,3 +267,9 @@ export default {
   }
 };
 </script>
+
+<style>
+.el-table th.gutter {
+  display: table-cell !important;
+}
+</style>
