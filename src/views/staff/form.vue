@@ -76,6 +76,15 @@
 
 <script>
 import staff from '@/api/staff';
+
+const defaultForm = {
+  name: '',
+  age: '',
+  graduateSchool: '',
+  degree: '',
+  graduateTime: ''
+};
+
 export default {
   data() {
     return {
@@ -88,26 +97,39 @@ export default {
       },
       saveBtnDisabled: false, // 保存按钮是否禁用
       rules: {
-        name: [{ required: true, message: '请输入项目名称', trigger: 'blur' }],
-        endTime: [{ validator: this.checkEndTime, trigger: 'change' }]
+        name: [{ required: true, message: '请输入员工姓名', trigger: 'blur' }]
       }
     };
   },
-  created() {
-    // params表示路由中的参数, 指 path: 'edit/:id' 中类似:id的参数
-    // 注意是route不是router
-    if (this.$route.params && this.$route.params.id) {
-      const id = this.$route.params.id;
-      this.fetchDataById(id);
+  // 监听
+  watch: {
+    // 当路由发生变化, 方法执行
+    $route(to, from) {
+      this.init();
     }
   },
+  created() {
+    this.init();
+  },
   methods: {
+    init() {
+      // params表示路由中的参数, 指 path: 'edit/:id' 中类似:id的参数
+      // 注意是route不是router
+      if (this.$route.params && this.$route.params.id) {
+        const id = this.$route.params.id;
+        this.fetchDataById(id);
+      } else {
+        // 否则新增一条记录后, defaultForm就变成了之前新增的值
+        // 使用对象拓展运算符, 拷贝对象, 而不是引用
+        this.staff = { ...defaultForm };
+      }
+    },
     // 通过id获取项目
     fetchDataById(id) {
       staff
-        .getProjectById(id)
+        .getStaffById(id)
         .then(response => {
-          this.project = response.data.staff;
+          this.staff = response.data.staff;
         })
         .catch(response => {
           this.$message({
@@ -121,9 +143,9 @@ export default {
       this.saveBtnDisabled = true;
       this.$refs[formName].validate(valid => {
         if (valid) {
-          // 如果project对象中有id, 说明是修改, 因为创建不需要输入id
-          // 这个project对象是后端返回给前端的, 不是data中的
-          if (this.project.id) {
+          // 如果staff对象中有id, 说明是修改, 因为创建不需要输入id
+          // 这个staff对象是后端返回给前端的, 不是data中的
+          if (this.staff.id) {
             this.updateData();
           } else {
             this.saveData();
@@ -134,10 +156,10 @@ export default {
         }
       });
     },
-    // 保存数据
+    // 保存员工
     saveData() {
-      project
-        .saveStaff(this.project)
+      staff
+        .saveStaff(this.staff)
         .then(response => {
           return this.$message({
             type: 'success',
@@ -146,7 +168,28 @@ export default {
         })
         .then(response => {
           // 保存成功跳转到表格页面
-          this.$router.push({ path: '/project' });
+          this.$router.push({ path: '/staff' });
+        })
+        .catch(response => {
+          this.$message({
+            type: 'error',
+            message: '保存失败'
+          });
+        });
+    },
+    // 修改员工
+    updateData() {
+      this.saveBtnDisabled = true;
+      staff
+        .updateStaff(this.staff)
+        .then(response => {
+          this.$message({
+            type: 'success',
+            message: '修改成功'
+          });
+        })
+        .then(response => {
+          this.$router.push({ path: '/staff' });
         })
         .catch(response => {
           this.$message({
@@ -158,20 +201,6 @@ export default {
     // 重置表单
     resetForm(formName) {
       this.$refs[formName].resetFields();
-    },
-    // 校验结束时间
-    checkEndTime(rule, value, callback) {
-      if (!value) {
-        callback(new Error('请选择结束时间'));
-      } else {
-        if (!this.staff.startTime) {
-          callback(new Error('请选择开始时间'));
-        } else if (Date.parse(this.staff.startTime) >= Date.parse(value)) {
-          callback(new Error('结束时间必须大于开始时间'));
-        } else {
-          callback();
-        }
-      }
     }
   }
 };

@@ -23,7 +23,7 @@
       >        
         <el-date-picker
            v-model="project.startTime"
-           type="date" 
+           type="date"
            placeholder="选择开始时间"
            value-format="yyyy-MM-dd"
         />
@@ -53,6 +53,13 @@
 
 <script>
 import project from '@/api/project';
+
+const defaultForm = {
+  name: '',
+  startTime: '',
+  endTime: ''
+};
+
 export default {
   data() {
     return {
@@ -68,15 +75,29 @@ export default {
       }
     };
   },
-  created() {
-    // params表示路由中的参数, 指 path: 'edit/:id' 中类似:id的参数
-    // 注意是route不是router
-    if (this.$route.params && this.$route.params.id) {
-      const id = this.$route.params.id;
-      this.fetchDataById(id);
+  // 监听
+  watch: {
+    // 当路由发生变化, 方法执行
+    $route(to, from) {
+      this.init();
     }
   },
+  created() {
+    this.init();
+  },
   methods: {
+    init() {
+      // params表示路由中的参数, 指 path: 'edit/:id' 中类似:id的参数
+      // 注意是route不是router
+      if (this.$route.params && this.$route.params.id) {
+        const id = this.$route.params.id;
+        this.fetchDataById(id);
+      } else {
+        // 否则新增一条记录后, defaultForm就变成了之前新增的值
+        // 使用对象拓展运算符, 拷贝对象, 而不是引用
+        this.project = { ...defaultForm };
+      }
+    },
     // 通过id获取项目
     fetchDataById(id) {
       project
@@ -109,7 +130,7 @@ export default {
         }
       });
     },
-    // 保存数据
+    // 保存项目
     saveData() {
       project
         .saveProject(this.project)
@@ -124,6 +145,31 @@ export default {
           this.$router.push({ path: '/project' });
         })
         .catch(response => {
+          this.$message({
+            type: 'error',
+            message: '保存失败'
+          });
+        });
+    },
+    // 修改项目
+    updateData() {
+      this.saveBtnDisabled = true;
+      console.log(this.project);
+      project
+        .updateProject(this.project)
+        .then(response => {
+          console.log("then1");
+          this.$message({
+            type: 'success',
+            message: '修改成功'
+          });
+        })
+        .then(response => {
+           console.log("then2");
+          this.$router.push({ path: '/project' });
+        })
+        .catch(response => {
+           console.log("catch");
           this.$message({
             type: 'error',
             message: '保存失败'

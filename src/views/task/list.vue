@@ -56,7 +56,7 @@
       <el-table-column
         prop="name"
         label="任务名称"
-        min-width="25%"
+        min-width="20%"
         align="center"
       >
       </el-table-column>
@@ -70,6 +70,20 @@
       <el-table-column
         prop="endTime"
         label="结束时间"
+        min-width="10%"
+        align="center"
+      >
+      </el-table-column>
+      <el-table-column
+        prop="projName"
+        label="隶属项目"
+        min-width="20%"
+        align="center"
+      >
+      </el-table-column>
+      <el-table-column
+        prop="staffName"
+        label="负责人"
         min-width="10%"
         align="center"
       >
@@ -90,18 +104,11 @@
       </el-table-column>
       <el-table-column
         label="操作"
-        min-width="20%"
+        min-width="15%"
         align="center"
       >
         <template slot-scope="scope">
           <el-button-group>
-            <el-button
-              type="success"
-              size="small"
-              icon="el-icon-tickets"
-              plain
-              @click="toDetails(scope.row.id)"
-            >详情</el-button>
             <el-button
               type="primary"
               size="small"
@@ -226,8 +233,8 @@ export default {
         return 0;
       }
       let today = new Date();
-      let totalDays = (Date.parse(row.endTime) - Date.parse(row.startTime)) / (1 * 24 * 60 * 60 * 1000);
-      let pastDays = (today.getTime() - Date.parse(row.startTime)) / (1 * 24 * 60 * 60 * 1000);
+      let totalDays = (Date.parse(row.endTime) - Date.parse(row.startTime)) / (1 * 60 * 60 * 1000);
+      let pastDays = (today.getTime() - Date.parse(row.startTime)) / (1 * 60 * 60 * 1000);
       let percentage = Math.round((pastDays / totalDays) * 100);
       if (percentage >= 100) {
         row.percentage = 100;

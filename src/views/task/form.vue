@@ -8,6 +8,16 @@
       ref="taskForm"
     >
       <el-form-item
+        label="项目名称"
+        prop="projName"
+      >
+        <el-input
+          v-model="task.projName"
+          disabled
+          style="width:300px"
+        />
+      </el-form-item>
+      <el-form-item
         label="任务名称"
         prop="name"
       >
@@ -39,11 +49,28 @@
            value-format="yyyy-MM-dd"
         />      
       </el-form-item>
+      <el-form-item
+        label="负责人"
+        prop="staffId"
+      >        
+        <el-select
+          v-model="task.staffId"
+          placeholder="请选择"
+        >
+          <el-option
+            v-for="item in staffNames"
+            :key="item.key"
+            :label="item.value"
+            :value="item.key"
+          >
+          </el-option>
+        </el-select>
+      </el-form-item>
       <el-form-item>
         <el-button
           :disable="saveBtnDisabled"
           type="primary"
-          @click="saveOrUpdate('taskForm')"
+          @click="updateTask('taskForm')"
         >保存</el-button>
         <el-button @click="resetForm('taskForm')">重置</el-button>
       </el-form-item>
@@ -53,14 +80,25 @@
 
 <script>
 import task from '@/api/task';
+import staff from '@/api/staff';
+
+const defaultForm = {
+  name: '',
+  startTime: '',
+  endTime: '',
+  staffId: ''
+};
+
 export default {
   data() {
     return {
       task: {
         name: '',
         startTime: '',
-        endTime: ''
+        endTime: '',
+        staffId: ''
       },
+      staffNames: [], // 员工姓名
       saveBtnDisabled: false, // 保存按钮是否禁用
       rules: {
         name: [{ required: true, message: '请输入项目名称', trigger: 'blur' }],
@@ -68,21 +106,50 @@ export default {
       }
     };
   },
-  created() {
-    // params表示路由中的参数, 指 path: 'edit/:id' 中类似:id的参数
-    // 注意是route不是router
-    if (this.$route.params && this.$route.params.id) {
-      const id = this.$route.params.id;
-      this.fetchDataById(id);
+  // 监听
+  watch: {
+    // 当路由发生变化, 方法执行
+    $route(to, from) {
+      this.init();
     }
   },
+  created() {
+    this.init();
+  },
   methods: {
-    // 通过id获取项目
+    init() {
+      // params表示路由中的参数, 指 path: 'edit/:id' 中类似:id的参数
+      // 注意是route不是router
+      if (this.$route.params && this.$route.params.id) {
+        const id = this.$route.params.id;
+        this.fetchDataById(id);
+      } else {
+        // 否则新增一条记录后, defaultForm就变成了之前新增的值
+        // 使用对象拓展运算符, 拷贝对象, 而不是引用
+        this.staff = { ...defaultForm };
+      }
+    },
+    // 获取员工姓名
+    getStaffNames(id) {
+      staff
+        .getStaffNamesByProjId(id)
+        .then(response => {
+          this.staffNames = response.data.names;
+        })
+        .catch(() => {
+          this.$message({
+            type: 'error',
+            message: '获取员工姓名失败'
+          });
+        });
+    },
+    // 通过id获取任务
     fetchDataById(id) {
       task
         .getTaskById(id)
         .then(response => {
           this.task = response.data.task;
+          this.getStaffNames(this.task.projId);
         })
         .catch(response => {
           this.$message({
@@ -91,8 +158,8 @@ export default {
           });
         });
     },
-    // 新建或修改
-    saveOrUpdate(formName) {
+    // 修改验证
+    updateTask(formName) {
       this.saveBtnDisabled = true;
       this.$refs[formName].validate(valid => {
         if (valid) {
@@ -100,8 +167,6 @@ export default {
           // 这个task对象是后端返回给前端的, 不是data中的
           if (this.task.id) {
             this.updateData();
-          } else {
-            this.saveData();
           }
         } else {
           console.log('error submit');
@@ -109,19 +174,19 @@ export default {
         }
       });
     },
-    // 保存数据
-    saveData() {
+    // 修改任务
+    updateData() {
+      this.saveBtnDisabled = true;
       task
-        .saveTask(this.task)
+        .updateTask(this.task)
         .then(response => {
-          return this.$message({
+          this.$message({
             type: 'success',
-            message: '保存成功'
+            message: '修改成功'
           });
         })
         .then(response => {
-          // 保存成功跳转到表格页面
-          this.$router.push({ path: '/task' });
+          this.$router.go(-1);
         })
         .catch(response => {
           this.$message({

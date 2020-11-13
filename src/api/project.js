@@ -31,5 +31,13 @@ export default {
       method: 'post',
       data: project
     });
+  },
+  // 修改一个项目
+  updateProject(project) {
+    return request({
+      url: `${api_name}/${project.id}`,
+      method: 'put',
+      data: project
+    });
   }
 };

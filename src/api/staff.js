@@ -28,6 +28,13 @@ export default {
   // 根据项目ID查询员工ID
   getStaffIdsByProjId(id) {
     return request({
+      url: `${api_name}/ids/${id}`,
+      method: 'get'
+    });
+  },
+  // 根据项目ID查询员工姓名
+  getStaffNamesByProjId(id) {
+    return request({
       url: `${api_name}/names/${id}`,
       method: 'get'
     });
@@ -44,6 +51,14 @@ export default {
     return request({
       url: api_name,
       method: 'post',
+      data: staff
+    });
+  },
+  // 修改一个员工
+  updateStaff(staff) {
+    return request({
+      url: `${api_name}/${staff.id}`,
+      method: 'put',
       data: staff
     });
   }

@@ -31,5 +31,13 @@ export default {
       method: 'post',
       data: task
     });
+  },
+  // 修改一个任务
+  updateTask(task) {
+    return request({
+      url: `${api_name}/${task.id}`,
+      method: 'put',
+      data: task
+    });
   }
 };

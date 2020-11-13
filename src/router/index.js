@@ -39,7 +39,6 @@ export const constantRouterMap = [
       }
     ]
   },
-
   // 项目管理
   {
     path: '/project',
@@ -64,43 +63,21 @@ export const constantRouterMap = [
         path: 'edit/:id',
         name: 'ProjectEdit',
         component: () => import('@/views/project/form'),
-        meta: { title: '编辑任务', noCache: true },
+        meta: { title: '编辑项目', noCache: true },
         hidden: true
       },
       {
-        path: 'details/:id',
-        name: 'ProjectDetails',
-        component: () => import('@/views/project/details'),
-        meta: { title: '项目详情', noCache: true },
+        path: 'member/:id',
+        name: 'ProjectMember',
+        component: () => import('@/views/project/member'),
+        meta: { title: '分配项目成员', noCache: true },
         hidden: true
-      }
-    ]
-  },
-  // 任务管理
-  {
-    path: '/task',
-    component: Layout,
-    redirect: '/task/list',
-    name: 'Task',
-    meta: { title: '任务管理', icon: 'list' },
-    children: [
-      {
-        path: 'list',
-        name: 'TaskList',
-        component: () => import('@/views/task/list'),
-        meta: { title: '任务列表' }
       },
       {
-        path: 'create',
-        name: 'TaskCreate',
-        component: () => import('@/views/task/form'),
-        meta: { title: '添加任务' }
-      },
-      {
-        path: 'edit/:id',
-        name: 'TaskEdit',
-        component: () => import('@/views/task/form'),
-        meta: { title: '编辑任务', noCache: true },
+        path: 'mission/:id',
+        name: 'ProjectMission',
+        component: () => import('@/views/project/mission'),
+        meta: { title: '分配项目任务', noCache: true },
         hidden: true
       }
     ]
@@ -130,6 +107,29 @@ export const constantRouterMap = [
         name: 'StaffEdit',
         component: () => import('@/views/staff/form'),
         meta: { title: '编辑员工', noCache: true },
+        hidden: true
+      }
+    ]
+  },
+  // 任务管理
+  {
+    path: '/task',
+    component: Layout,
+    redirect: '/task/list',
+    name: 'Task',
+    meta: { title: '任务管理', icon: 'list' },
+    children: [
+      {
+        path: 'list',
+        name: 'TaskList',
+        component: () => import('@/views/task/list'),
+        meta: { title: '任务列表' }
+      },
+      {
+        path: 'edit/:id',
+        name: 'TaskEdit',
+        component: () => import('@/views/task/form'),
+        meta: { title: '编辑任务', noCache: true },
         hidden: true
       }
     ]

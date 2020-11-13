@@ -77,13 +77,13 @@
       <el-table-column
         prop="staffNames"
         label="项目成员"
-        min-width="25%"
+        min-width="20%"
         align="center"
       >
       </el-table-column>
       <el-table-column
         label="时间进度"
-        min-width="9%"
+        min-width="8%"
         align="center"
       >
         <template slot-scope="scope">
@@ -97,20 +97,27 @@
       </el-table-column>
       <el-table-column
         label="操作"
-        min-width="20%"
+        min-width="26%"
         align="center"
       >
         <template slot-scope="scope">
           <el-button-group>
             <el-button
+              type="primary"
+              size="small"
+              icon="el-icon-user"
+              plain
+              @click="toMember(scope.row.id)"
+            >成员</el-button>
+            <el-button
               type="success"
               size="small"
               icon="el-icon-tickets"
               plain
-              @click="toDetails(scope.row.id)"
-            >详情</el-button>
+              @click="toMission(scope.row.id)"
+            >任务</el-button>
             <el-button
-              type="primary"
+              type="warning"
               size="small"
               icon="el-icon-edit"
               plain
@@ -166,8 +173,11 @@ export default {
     toEdit(id) {
       this.$router.push('/project/edit/' + id);
     },
-    toDetails(id) {
-      this.$router.push('/project/details/' + id);
+    toMember(id) {
+      this.$router.push('/project/member/' + id);
+    },
+    toMission(id) {
+      this.$router.push('/project/mission/' + id);
     },
     // 获取数据
     fetchData(page = 1) {
@@ -236,8 +246,8 @@ export default {
         return 0;
       }
       let today = new Date();
-      let totalDays = (Date.parse(row.endTime) - Date.parse(row.startTime)) / (1 * 24 * 60 * 60 * 1000);
-      let pastDays = (today.getTime() - Date.parse(row.startTime)) / (1 * 24 * 60 * 60 * 1000);
+      let totalDays = (Date.parse(row.endTime) - Date.parse(row.startTime)) / (1  * 60 * 60 * 1000);
+      let pastDays = (today.getTime() - Date.parse(row.startTime)) / (1 * 60 * 60 * 1000);
       let percentage = Math.round((pastDays / totalDays) * 100);
       if (percentage >= 100) {
         row.percentage = 100;
