@@ -17,6 +17,13 @@ export default {
       data: searchObj
     });
   },
+  // 根据员工ID查询项目(分页)
+  getProjectByStaffId(page, limit, staffId) {
+    return request({
+      url: `${api_name}/${page}/${limit}/${staffId}`,
+      method: 'get'
+    });
+  },
   // 根据ID删除一个项目
   removeProjectById(id) {
     return request({

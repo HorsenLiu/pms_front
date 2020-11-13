@@ -272,9 +272,9 @@ export default {
     this.projId = this.$route.params.id;
     this.searchObj = { projId: this.projId };
     this.task.projId = this.projId;
-    this.getProject(this.projId);
+    this.getProject();
     this.getTask();
-    this.getStaffNames(this.projId);
+    this.getStaffNames();
   },
   methods: {
     // 页面跳转
@@ -288,10 +288,10 @@ export default {
       this.$router.push('/task/edit/' + id);
     },
     // 通过id获取项目
-    getProject(projId) {
+    getProject() {
       this.listLoading = true;
       project
-        .getProjectById(projId)
+        .getProjectById(this.projId)
         .then(response => {
           let array = [];
           array.push(response.data.project);
@@ -328,9 +328,9 @@ export default {
         });
     },
     // 获取员工姓名
-    getStaffNames(id) {
+    getStaffNames() {
       staff
-        .getStaffNamesByProjId(id)
+        .getStaffNamesByProjId(this.projId)
         .then(response => {
           this.staffNames = response.data.names;
         })

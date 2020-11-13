@@ -169,6 +169,9 @@ export default {
     toEdit(id) {
       this.$router.push('/staff/edit/' + id);
     },
+    toDetails(id){
+      this.$router.push('/staff/details/' + id);
+    },
     // 获取数据
     fetchData(page = 1) {
       this.page = page;

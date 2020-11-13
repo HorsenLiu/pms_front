@@ -108,6 +108,13 @@ export const constantRouterMap = [
         component: () => import('@/views/staff/form'),
         meta: { title: '编辑员工', noCache: true },
         hidden: true
+      },
+      {
+        path: 'details/:id',
+        name: 'StaffDetails',
+        component: () => import('@/views/staff/details'),
+        meta: { title: '员工详情', noCache: true },
+        hidden: true
       }
     ]
   },

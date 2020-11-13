@@ -113,8 +113,8 @@ export default {
   },
   created() {
     this.projId = this.$route.params.id;
-    this.fetchData(this.projId);
-    this.generateStaff(this.projId);
+    this.fetchData();
+    this.generateStaff();
   },
   methods: {
     // 页面跳转
@@ -125,10 +125,10 @@ export default {
       this.$router.push('/project/mission/' + id);
     },
     // 通过id获取项目
-    fetchData(projId) {
+    fetchData() {
       this.listLoading = true;
       project
-        .getProjectById(projId)
+        .getProjectById(this.projId)
         .then(response => {
           let array = [];
           array.push(response.data.project);
@@ -143,7 +143,7 @@ export default {
         });
     },
     // 生成员工姓名
-    generateStaff(projId) {
+    generateStaff() {
       staff
         .getStaffNames(this.searchObj)
         .then(response => {
@@ -158,7 +158,7 @@ export default {
           });
         });
       staff
-        .getStaffIdsByProjId(projId)
+        .getStaffIdsByProjId(this.projId)
         .then(response => {
           this.isEmpty = response.data.isEmpty;
           if (response.success === true && !this.isEmpty) {
